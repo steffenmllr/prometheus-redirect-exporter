@@ -1,5 +1,7 @@
 # prometheus-redirect-exporter
 
+![https://cloud.docker.com/u/steffenmllr/repository/docker/steffenmllr/prometheus-redirect-exporter](https://img.shields.io/docker/automated/steffenmllr/prometheus-redirect-exporter.svg)
+
 ### Request
 ```
 http://localhost:3000/probe?from=http://foo.com&to=http://bar.com&code=301
