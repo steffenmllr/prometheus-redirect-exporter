@@ -24,13 +24,6 @@ probe_http_ssl ${result.targetHasSSL}
 # HELP probe_http_status_code Response HTTP status code
 # TYPE probe_http_status_code gauge
 probe_http_status_code ${result.statusCode}
-# HELP probe_ssl_earliest_cert_valid_from SSL Certificate valid from
-# TYPE probe_ssl_earliest_cert_valid_from gauge
-probe_ssl_earliest_cert_valid_from ${result.ssl.valid_from}
-# HELP probe_ssl_earliest_cert_expiry SSL Certificate valid from
-# TYPE probe_ssl_earliest_cert_expiry gauge
-probe_ssl_earliest_cert_expiry ${result.ssl.valid_to}
-# HELP probe_success Displays whether or not the probe was a success
 # TYPE probe_success gauge
 probe_success ${result.success}
 `;
@@ -48,7 +41,7 @@ const testRedirect = (from, to, statusCode = 301, cb) => {
         strictSSL: true,
         timeout: 5000,
         followRedirect: (response) => redirects.push({ uri: response.headers.location, code: response.statusCode })
-    }, (err, response, body) => {
+    }, (err, rsp, body) => {
         const length = err ? 0 : body.length;
         const isSuccessFull = () => {
             const lastRedirect = last(redirects);
@@ -56,25 +49,14 @@ const testRedirect = (from, to, statusCode = 301, cb) => {
             return hasTargetURL && parseInt(lastRedirect.code, 10) === parseInt(statusCode, 10) ? 1 : 0
         };
 
-        const getSSLValid = () => {
-            let valid_from = 0;
-            let valid_to = 0;
-            if (response.request.uri.protocol !== 'https:') {
-                return { valid_from, valid_to };
-            }
-            const info = response.connection.getPeerCertificate();
-            return { valid_from: +new Date(info.valid_from), valid_to: +new Date(info.valid_to) };
-        };
-
         const result = {
-            lookup: err ? 0 : response.timings.lookup / 1000,
-            duration: err ? 0 : response.timings.end / 1000,
+            lookup: err ? 0 : rsp.timings.lookup / 1000,
+            duration: err ? 0 : rsp.timings.end / 1000,
             length,
             noOfRedirects: redirects.length,
-            targetHasSSL: err ? 0 : response.request.uri.protocol === 'https:' ? 1 : 0,
-            statusCode: err ? 0 : response.statusCode,
-            success: err ? 0 : isSuccessFull(),
-            ssl: err ? { valid_from: 0, valid_to: 0 } : getSSLValid()
+            targetHasSSL: err ? 0 : rsp.request.uri.protocol === 'https:' ? 1 : 0,
+            statusCode: err ? 0 : rsp.statusCode,
+            success: err ? 0 : isSuccessFull()
         };
 
 
