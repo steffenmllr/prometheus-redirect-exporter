@@ -34,10 +34,10 @@ const last = (array) => {
     return length ? array[length - 1] : undefined;
 }
 
-const testRedirect = (source, target, statusCode = 301, debug = false, cb) => {
+const testRedirect = (from, to, statusCode = 301, cb) => {
     const redirects = [];
     request({
-        uri: source,
+        uri: from,
         time: true,
         timeout: 5000,
         followRedirect: (response) => redirects.push({ uri: response.headers.location, code: response.statusCode })
@@ -45,7 +45,7 @@ const testRedirect = (source, target, statusCode = 301, debug = false, cb) => {
         const length = err ? 0 : body.length;
         const isSuccessFull = () => {
             const lastRedirect = last(redirects);
-            const hasTargetURL = normalizeUrl(lastRedirect.uri) === normalizeUrl(target);
+            const hasTargetURL = normalizeUrl(lastRedirect.uri) === normalizeUrl(to);
             return hasTargetURL && lastRedirect.code === statusCode ? 1 : 0
 
         };
@@ -65,7 +65,9 @@ const testRedirect = (source, target, statusCode = 301, debug = false, cb) => {
 
 const app = http.createServer((req, res) => {
     const requestUrl = url.parse(req.url);
-    const { source, debug, target, statusCode } = querystring.parse(requestUrl.query);
+    const { from, to, statusCode } = querystring.parse(requestUrl.query);
+    console.log('Probe request', querystring.parse(requestUrl.query));
+
     switch (requestUrl.pathname) {
         // Health endpoint
         case '/':
@@ -74,7 +76,7 @@ const app = http.createServer((req, res) => {
             break;
 
         case '/probe':
-            testRedirect(source, target, statusCode, debug, (code, body) => {
+            testRedirect(from, to, statusCode, (code, body) => {
                 res.writeHead(code, {
                     'Content-Type': 'text/plain'
                 });

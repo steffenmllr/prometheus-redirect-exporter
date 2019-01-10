@@ -2,9 +2,10 @@
 
 ### Request
 ```
-http://localhost:3000/probe?source=http://foo.com&target=http://bar.com&code=301`
+http://localhost:3000/probe?from=http://foo.com&to=http://bar.com&code=301
 ```
 
+Check out the [prometheus-sample.yaml](prometheus-sample.yaml) for a sample config
 
 ### Return values
 
