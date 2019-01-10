@@ -1,0 +1,28 @@
+{
+  "name": "prometheus-redirect-exporter",
+  "version": "1.0.0",
+  "description": "Checks redirects and exports them to prometheus",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/steffenmllr/prometheus-redirect-exporter.git"
+  },
+  "keywords": [
+    "prometheus",
+    "redirects",
+    "exporter"
+  ],
+  "author": "Steffen Müller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/steffenmllr/prometheus-redirect-exporter/issues"
+  },
+  "homepage": "https://github.com/steffenmllr/prometheus-redirect-exporter#readme",
+  "dependencies": {
+    "normalize-url": "^4.1.0",
+    "request": "^2.88.0"
+  }
+}
