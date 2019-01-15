@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "tape test.js"
+    "test": "tape test.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -27,9 +27,11 @@
     "follow-redirects": "^1.6.1",
     "lodash.isempty": "^4.4.0",
     "lodash.pick": "^4.4.0",
+    "lodash.uniqby": "^4.7.0",
     "normalize-url": "^4.1.0"
   },
   "devDependencies": {
+    "tap-spec": "^5.0.0",
     "tape": "^4.9.2"
   }
 }

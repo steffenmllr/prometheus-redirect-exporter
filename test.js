@@ -19,6 +19,41 @@ test('should generate gauges', function (t) {
     t.equal(result[2], 'http_check_valid{has_https="true"} 1');
 });
 
+test('should generate gauges and convert true to 1', function (t) {
+    t.plan(2);
+
+    const result = generateGauge({
+        name: 'http_check_valid',
+        value: true
+    });
+
+    t.equal(result[0], "# TYPE http_check_valid gauge");
+    t.equal(result[1], 'http_check_valid 1');
+});
+
+test('should default the value to 0', function (t) {
+    t.plan(2);
+
+    const result = generateGauge({
+        name: 'http_check_valid'
+    });
+
+    t.equal(result[0], "# TYPE http_check_valid gauge");
+    t.equal(result[1], 'http_check_valid 0');
+});
+
+test('should set invalid values to 0', function (t) {
+    t.plan(2);
+
+    const result = generateGauge({
+        name: 'http_check_valid',
+        value: 'invalid'
+    });
+
+    t.equal(result[0], "# TYPE http_check_valid gauge");
+    t.equal(result[1], 'http_check_valid 0');
+});
+
 
 test('should test a https website', function (t) {
     t.plan(5);
@@ -26,10 +61,11 @@ test('should test a https website', function (t) {
     checkUrl('https://www.google.de', (res) => {
         t.equal(res.has_https, true);
         t.equal(res.valid, true);
+
         // let's assue google has a 14 days valid cert
         t.equal(res.ssl_valid_hours > 14 * 24, true);
-        t.equal(res.redirects_no, 2);
-        t.equal(res.redirect_target, 'https://google.de');
+        t.equal(res.redirects_no, 0);
+        t.equal(res.url, 'https://www.google.de');
     });
 });
 
@@ -39,8 +75,8 @@ test('should test a http website', function (t) {
     checkUrl('http://www.google.de', (res) => {
         t.equal(res.valid, true);
         t.equal(res.has_https, false);
-        t.equal(res.redirects_no, 2);
-        t.equal(res.redirect_target, 'http://google.de');
+        t.equal(res.redirects_no, 0);
+        t.equal(res.redirect_target, 'http://www.google.de');
     });
 });
 
@@ -84,5 +120,17 @@ test('should be invalid for a invalid url', function (t) {
 
     checkUrl('kdlnsajkfndjksanlf', (res) => {
         t.equal(res.valid, false);
+    });
+});
+
+
+test('should have the correct redirect number', function (t) {
+    t.plan(4);
+
+    checkUrl('https://google.de', (res) => {
+        t.equal(res.valid, true);
+        t.equal(res.has_https, true);
+        t.equal(res.redirects_no, 1);
+        t.equal(res.redirect_target, 'https://www.google.de/');
     });
 });
