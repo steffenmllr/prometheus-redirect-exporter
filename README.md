@@ -3,8 +3,6 @@
 ![https://cloud.docker.com/u/steffenmllr/repository/docker/steffenmllr/prometheus-uptime-exporter]
 (https://img.shields.io/docker/automated/steffenmllr/prometheus-uptime-exporter.svg)
 
-[![Build Status](https://travis-ci.org/steffenmllr/prometheus-uptime-exporter.svg?branch=master)](https://travis-ci.org/steffenmllr/prometheus-uptime-exporter)
-
 ### Request
 ```
 http://localhost:3000/probe?url=https://www.google.com
