@@ -4,7 +4,8 @@
   "description": "Checks redirects and exports them to prometheus",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "tape test.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,14 @@
   },
   "homepage": "https://github.com/steffenmllr/prometheus-redirect-exporter#readme",
   "dependencies": {
+    "express": "^4.16.4",
+    "follow-redirects": "^1.6.1",
+    "lodash.pick": "^4.4.0",
     "normalize-url": "^4.1.0",
+    "prom-client": "^11.2.1",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "tape": "^4.9.2"
   }
 }
