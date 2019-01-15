@@ -1,5 +1,24 @@
 const test = require('tape');
 const checkUrl = require('./lib/check');
+const {generateGauge} = require('./lib/prometheus');
+
+test('should generate gauges', function (t) {
+    t.plan(3);
+
+    const result = generateGauge({
+        name: 'http_check_valid',
+        help: 'If the site could be reached',
+        value: 1,
+        labels: {
+            has_https: true
+        }
+    });
+
+    t.equal(result[0], "# HELP http_check_valid If the site could be reached");
+    t.equal(result[1], "# TYPE http_check_valid gauge");
+    t.equal(result[2], 'http_check_valid{has_https="true"} 1');
+});
+
 
 test('should test a https website', function (t) {
     t.plan(5);

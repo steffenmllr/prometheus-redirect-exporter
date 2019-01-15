@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "follow-redirects": "^1.6.1",
+    "lodash.isempty": "^4.4.0",
     "lodash.pick": "^4.4.0",
     "normalize-url": "^4.1.0"
   },
