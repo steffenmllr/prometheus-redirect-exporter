@@ -1,17 +1,15 @@
 global:
  scrape_interval: 2s
 scrape_configs:
-  - job_name: redirects-job-name
+  - job_name: uptime-exporters
     metrics_path: /probe
-    params:
-      statusCode: ["301"]
-      to: ["http://www.google.de"]
     static_configs:
       - targets:
         - http://google.de
+        - https://google.de
     relabel_configs:
       - source_labels: [__address__]
-        target_label: __param_from
+        target_label: __param_url
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
